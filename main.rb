@@ -3,7 +3,6 @@ require 'hpricot'
 require 'open-uri'
 require 'mechanize'
 require "awesome_print"
-# require "slack-notifier"
 require "microsoft_translator"
 require 'dotenv'
 require "slack"
@@ -29,7 +28,6 @@ def get_title(index)
 	end
 end
 
-# notifier = Slack::Notifier.new(ENV["SLACK_HOOK"], channel: '#canteen_test', username: 'CanteenBot')
 slack_client = Slack::Web::Client.new(token: ENV["SLACK_TOKEN"])
 translator = MicrosoftTranslator::Client.new(ENV["MS_TRANS_ID"], ENV["MS_TRANS_SECRET"])
 
