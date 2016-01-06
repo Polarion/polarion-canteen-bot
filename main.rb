@@ -9,14 +9,32 @@ require 'dotenv'
 
 Dotenv.load
 
+def get_title(index)
+	case index
+	when 0
+		return "P I."
+	when 1
+		return "P II."
+	when 2
+		return "M"
+	when 3
+		return "VJ I."
+	when 4
+		return "VJ II."
+	when 5
+		return "SJ"
+	when 6
+		return "BJ"
+	end
+end
+
 notifier = Slack::Notifier.new(ENV["SLACK_HOOK"], channel: '#canteen_test', username: 'CanteenBot')
 translator = MicrosoftTranslator::Client.new(ENV["MS_TRANS_ID"], ENV["MS_TRANS_SECRET"])
-
-
 
 client = Mechanize.new { |agent|
 	agent.user_agent_alias = 'Mac Safari'
 }
+
 foods = []
 client.get('https://restaurace.eurest.cz/Pages/Client/Restaurant/MenuCard.aspx') do |home_page|
 	form = home_page.form_with(:id => 'aspnetForm')
@@ -28,11 +46,11 @@ client.get('https://restaurace.eurest.cz/Pages/Client/Restaurant/MenuCard.aspx')
 	table = (doc/"#ctl00_ctl00_ContentMain_ContentBody_menu__dlMenuCardDays")
 	row = (table/"tr").first
 	items_list = (row/"#ctl00_ctl00_ContentMain_ContentBody_menu__dlMenuCardDays_ctl00__dlMenuCardClaims_ctl00__dlMenuCardItems")
-	(items_list/"tr").each do |item|
+	(items_list/"tr").each_with_index do |item,index|
 		divs = (item/"div")
-		title = divs[1].inner_html.strip
+		title = get_title(index)
 		food = divs[3].inner_html.strip.gsub(/\(A.*\)/,"").strip
-		
+
 		if ENV['TRANSLATE'] == "true"
 			translated = translator.translate(food,"cs","en","text/html")
 			foods << "#{title} - *#{food}* _(#{translated})_"
