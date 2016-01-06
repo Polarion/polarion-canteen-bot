@@ -51,7 +51,7 @@ client.get('https://restaurace.eurest.cz/Pages/Client/Restaurant/MenuCard.aspx')
 	(items_list/"tr").each_with_index do |item,index|
 		divs = (item/"div")
 		title = get_title(index)
-		food = divs[3].inner_html.strip.gsub(/\(A.*\)/,"").strip
+		food = divs[3].inner_html.force_encoding("UTF-8").strip.gsub(/\(A.*\)/,"").strip
 
 		if ENV['TRANSLATE'] == "true"
 			translated = translator.translate(food,"cs","en","text/html")
