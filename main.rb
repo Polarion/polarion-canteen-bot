@@ -17,7 +17,7 @@ translator = MicrosoftTranslator::Client.new(ENV["MS_TRANS_ID"], ENV["MS_TRANS_S
 client = Mechanize.new { |agent|
 	agent.user_agent_alias = 'Mac Safari'
 }
-food = []
+foods = []
 client.get('https://restaurace.eurest.cz/Pages/Client/Restaurant/MenuCard.aspx') do |home_page|
 	form = home_page.form_with(:id => 'aspnetForm')
 	form['ctl00$ctl00$ContentMain$ContentBody$Login$UserName'] = ENV["EUREST_LOGIN"]
@@ -30,19 +30,21 @@ client.get('https://restaurace.eurest.cz/Pages/Client/Restaurant/MenuCard.aspx')
 	items_list = (row/"#ctl00_ctl00_ContentMain_ContentBody_menu__dlMenuCardDays_ctl00__dlMenuCardClaims_ctl00__dlMenuCardItems")
 	(items_list/"tr").each do |item|
 		divs = (item/"div")
-		title = divs[1].inner_html.strip.split(" ")
-
-		food = divs[3].inner_html.strip.gsub(/\(A.*\)/,"")
-		# translated = "english"
-		translated = translator.translate(food,"cs","en","text/html")
-
-		food << "#{title} - *#{food}* (_#{translated}_)"
+		title = divs[1].inner_html.strip
+		food = divs[3].inner_html.strip.gsub(/\(A.*\)/,"").strip
+		
+		if ENV['TRANSLATE'] == "true"
+			translated = translator.translate(food,"cs","en","text/html")
+			foods << "#{title} - *#{food}* _(#{translated})_"
+		else
+			foods << "#{title} - *#{food}*"
+		end
 	end
 end
 
 text = "*Todays selection in canteen is:*\n\n"
 attachment = []
-food.each_with_index do |item,index|
+foods.each_with_index do |item,index|
 	if index > 1
 		# it is a soup
 		text += ":curry: #{item}\n"
