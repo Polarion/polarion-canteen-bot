@@ -1,6 +1,6 @@
 # Polarion Canteen Bot
 
-A bot for Polarion Canteen that sends a daily menu from Polarion Prague Office canteen to the slack channel
+Slack bot for Polarion Canteen that sends a daily menu from Polarion Prague Office canteen to the slack channel
 
 You will need following:
 
