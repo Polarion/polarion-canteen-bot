@@ -3,9 +3,10 @@ require 'hpricot'
 require 'open-uri'
 require 'mechanize'
 require "awesome_print"
-require "slack-notifier"
+# require "slack-notifier"
 require "microsoft_translator"
 require 'dotenv'
+require "slack"
 
 Dotenv.load
 
@@ -28,7 +29,8 @@ def get_title(index)
 	end
 end
 
-notifier = Slack::Notifier.new(ENV["SLACK_HOOK"], channel: '#canteen_test', username: 'CanteenBot')
+# notifier = Slack::Notifier.new(ENV["SLACK_HOOK"], channel: '#canteen_test', username: 'CanteenBot')
+slack_client = Slack::Web::Client.new(token: ENV["SLACK_TOKEN"])
 translator = MicrosoftTranslator::Client.new(ENV["MS_TRANS_ID"], ENV["MS_TRANS_SECRET"])
 
 client = Mechanize.new { |agent|
@@ -72,4 +74,17 @@ foods.each_with_index do |item,index|
 	end
 end
 
-notifier.ping text
+if ENV['VOTING'] == "true"
+	text += "\n"
+	text += "What time are you planning on going:\n :one: 11:30 • :two: 11:45 • :three: 12:00 • :four: 12:15 • :five: 12:30 • :six: later" 
+	post = slack_client.chat_postMessage(channel: '#canteen_test', text: text, as_user: false, username: ENV["BOT_NAME"], icon_url: ENV["BOT_ICON"])
+	slack_client.reactions_add(name: "one", timestamp: post["ts"], channel: post["channel"])
+	slack_client.reactions_add(name: "two", timestamp: post["ts"], channel: post["channel"])
+	slack_client.reactions_add(name: "three", timestamp: post["ts"], channel: post["channel"])
+	slack_client.reactions_add(name: "four", timestamp: post["ts"], channel: post["channel"])
+	slack_client.reactions_add(name: "five", timestamp: post["ts"], channel: post["channel"])
+	slack_client.reactions_add(name: "six", timestamp: post["ts"], channel: post["channel"])
+else
+	post = slack_client.chat_postMessage(channel: '#canteen_test', text: text, as_user: false, username: ENV["BOT_NAME"], icon_url: ENV["BOT_ICON"])
+end
+
