@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'rubygems'
 require 'hpricot'
 require 'open-uri'
