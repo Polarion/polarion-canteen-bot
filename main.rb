@@ -76,8 +76,8 @@ end
 
 if ENV['VOTING'] == "true"
 	text += "\n"
-	text += "What time are you planning on going:\n :one: 11:30 • :two: 11:45 • :three: 12:00 • :four: 12:15 • :five: 12:30 • :six: later" 
-	post = slack_client.chat_postMessage(channel: '#canteen_test', text: text, as_user: false, username: ENV["BOT_NAME"], icon_url: ENV["BOT_ICON"])
+	text += "What time are you planning on going:\n :one: 11:30 • :two: 11:45 • :three: 12:00 • :four: 12:15 • :five: 12:30 • :six: Later" 
+	post = slack_client.chat_postMessage(channel: "#{ENV['BOT_CHANNEL']}", text: text, as_user: false, username: ENV["BOT_NAME"], icon_url: ENV["BOT_ICON"])
 	slack_client.reactions_add(name: "one", timestamp: post["ts"], channel: post["channel"])
 	slack_client.reactions_add(name: "two", timestamp: post["ts"], channel: post["channel"])
 	slack_client.reactions_add(name: "three", timestamp: post["ts"], channel: post["channel"])
@@ -85,6 +85,6 @@ if ENV['VOTING'] == "true"
 	slack_client.reactions_add(name: "five", timestamp: post["ts"], channel: post["channel"])
 	slack_client.reactions_add(name: "six", timestamp: post["ts"], channel: post["channel"])
 else
-	post = slack_client.chat_postMessage(channel: '#canteen_test', text: text, as_user: false, username: ENV["BOT_NAME"], icon_url: ENV["BOT_ICON"])
+	post = slack_client.chat_postMessage(channel: "#{ENV['BOT_CHANNEL']}", text: text, as_user: false, username: ENV["BOT_NAME"], icon_url: ENV["BOT_ICON"])
 end
 
