@@ -8,7 +8,7 @@ require "microsoft_translator"
 require 'dotenv'
 require "slack"
 
-Dotenv.load
+Dotenv.load  File.dirname(__FILE__).to_s + "/.env"
 
 def get_title(index)
 	case index
