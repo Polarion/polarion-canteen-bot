@@ -30,7 +30,7 @@ def get_title(index)
 end
 
 slack_client = Slack::Web::Client.new(token: ENV["SLACK_TOKEN"])
-translator = MicrosoftTranslator::Client.new(ENV["MS_TRANS_ID"], ENV["MS_TRANS_SECRET"])
+# translator = MicrosoftTranslator::Client.new(ENV["MS_TRANS_ID"], ENV["MS_TRANS_SECRET"])
 
 client = Mechanize.new { |agent|
 	agent.user_agent_alias = 'Mac Safari'
